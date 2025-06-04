@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modern User Data Form</title>
+  <title>Firebase User Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -364,6 +364,7 @@
     #dataViewModal .modal-content {
       max-width: 800px;
       text-align: left;
+      padding: 30px;
     }
     
     .table-container {
@@ -432,7 +433,57 @@
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
+    
+    /* Loading spinner */
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+      display: none;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      background: rgba(76, 175, 80, 0.15);
+      color: #4CAF50;
+    }
+    
+    /* Firebase status indicator */
+    .firebase-status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    
+    .status-connected {
+      color: #4CAF50;
+    }
+    
+    .status-disconnected {
+      color: #f44336;
+    }
   </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <div class="container">
@@ -440,26 +491,33 @@
       <div class="logo">
         <i class="fas fa-database"></i>
       </div>
-      <h1>User Data Portal</h1>
-      <p class="subtitle">Securely store and manage your user information with Firebase integration</p>
+      <h1>Firebase User Portal</h1>
+      <p class="subtitle">Securely store and manage user information with Firebase Firestore</p>
       
       <div class="stats">
         <div class="stat-card">
           <i class="fas fa-users"></i>
-          <div class="number">1,248</div>
+          <div class="number" id="userCount">0</div>
           <div class="label">Total Users</div>
         </div>
         <div class="stat-card">
           <i class="fas fa-cloud-upload-alt"></i>
-          <div class="number">99.9%</div>
-          <div class="label">Uptime</div>
+          <div class="number" id="statusIndicator">Online</div>
+          <div class="label">Connection</div>
+        </div>
+      </div>
+      
+      <div class="firebase-status">
+        <div class="status-badge">
+          <i class="fas fa-bolt"></i>
+          <span>Firebase Connected</span>
         </div>
       </div>
     </div>
     
     <div class="main-card">
       <div class="card-header">
-        <h2 class="card-title">User Information</h2>
+        <h2 class="card-title">Add New User</h2>
         <div class="badge">
           <i class="fas fa-lock" style="color: #4CAF50;"></i>
           <span style="color: var(--gray);">Secured Connection</span>
@@ -485,10 +543,10 @@
         
         <div class="buttons">
           <button type="submit" class="btn btn-primary">
-            <i class="fas fa-paper-plane"></i> Submit Data
+            <i class="fas fa-paper-plane"></i> Add to Firestore
           </button>
           <button type="button" id="viewDataBtn" class="btn btn-secondary">
-            <i class="fas fa-table"></i> View Data
+            <i class="fas fa-table"></i> View All Data
           </button>
         </div>
       </form>
@@ -524,7 +582,12 @@
             </tr>
           </thead>
           <tbody id="userDataBody">
-            <!-- Data will be loaded here -->
+            <tr>
+              <td colspan="4" style="text-align: center;">
+                <div class="spinner" id="loadingSpinner"></div>
+                Loading data from Firestore...
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -533,6 +596,20 @@
   </div>
   
   <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD5Fd0gv3j1nQ2v0qV6Q0z3XK6J7b8c9d0",
+      authDomain: "user-portal-demo.firebaseapp.com",
+      projectId: "user-portal-demo",
+      storageBucket: "user-portal-demo.appspot.com",
+      messagingSenderId: "123456789012",
+      appId: "1:123456789012:web:abcdefghijklmnopqrstuv"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    
     // Function to show the custom alert modal 
     function showCustomAlert(title, message, isSuccess) { 
       const modal = document.getElementById('customAlertModal'); 
@@ -572,22 +649,39 @@
 
     // View Data button functionality
     document.getElementById('viewDataBtn').addEventListener('click', async () => {
+      // Show the modal immediately
+      document.getElementById('dataViewModal').classList.add('visible');
+      
+      // Show loading spinner
+      const spinner = document.getElementById('loadingSpinner');
+      spinner.style.display = 'block';
+      
       try {
-        // Simulate fetching data
-        const sampleData = [
-          {id: 'USR-001', name: 'John Doe', email: 'john@example.com', createdAt: new Date('2023-06-05T10:30:00')},
-          {id: 'USR-002', name: 'Jane Smith', email: 'jane@company.com', createdAt: new Date('2023-06-06T14:15:00')},
-          {id: 'USR-003', name: 'Robert Johnson', email: 'robertj@mail.net', createdAt: new Date('2023-06-07T09:45:00')},
-          {id: 'USR-004', name: 'Sarah Williams', email: 'sarah.w@domain.org', createdAt: new Date('2023-06-08T11:20:00')},
-          {id: 'USR-005', name: 'Michael Brown', email: 'm.brown@example.com', createdAt: new Date('2023-06-09T16:40:00')},
-          {id: 'USR-006', name: 'Emily Davis', email: 'emilyd@mail.com', createdAt: new Date('2023-06-10T13:10:00')}
-        ];
+        // Fetch data from Firestore
+        const snapshot = await db.collection("users").get();
+        const users = [];
         
-        displayUserData(sampleData);
-        document.getElementById('dataViewModal').classList.add('visible');
+        snapshot.forEach(doc => {
+          const userData = doc.data();
+          users.push({
+            id: doc.id,
+            name: userData.name,
+            email: userData.email,
+            createdAt: userData.timestamp ? new Date(userData.timestamp.seconds * 1000) : new Date()
+          });
+        });
+        
+        // Update user count
+        document.getElementById('userCount').textContent = users.length;
+        
+        // Display the data
+        displayUserData(users);
       } catch (error) {
-        showCustomAlert('⚠ Network Error', 'Could not connect to the server', false);
-        console.error('Fetch error:', error);
+        showCustomAlert('⚠ Firestore Error', 'Could not fetch data: ' + error.message, false);
+        console.error('Firestore error:', error);
+      } finally {
+        // Hide loading spinner
+        spinner.style.display = 'none';
       }
     });
 
@@ -597,14 +691,14 @@
       tbody.innerHTML = '';
       
       if (users.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No user data found</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No user data found in Firestore</td></tr>';
         return;
       }
       
       users.forEach(user => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${user.id}</td>
+          <td>${user.id.substring(0, 8)}</td>
           <td>${user.name || 'N/A'}</td>
           <td>${user.email || 'N/A'}</td>
           <td>${user.createdAt.toLocaleString()}</td>
@@ -633,15 +727,24 @@
         return;
       }
 
-      // Simulate API call to Firebase
+      // Add data to Firestore
       try { 
-        // In a real app, we would use fetch to send data to the server
-        // For demo, we'll simulate a successful response
-        showCustomAlert('✅ Success!', `Data for ${name} successfully saved to Firebase!`, true); 
+        // Add a new document with a generated ID
+        const docRef = await db.collection("users").add({
+          name: name,
+          email: email,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        showCustomAlert('✅ Success!', `User data added to Firestore with ID: ${docRef.id}`, true); 
         form.reset();
+        
+        // Update user count
+        document.getElementById('userCount').textContent = 
+          parseInt(document.getElementById('userCount').textContent) + 1;
       } catch (error) { 
-        showCustomAlert('⚠ Network Error', 'Could not connect to the server.', false); 
-        console.error('Fetch error:', error); 
+        showCustomAlert('⚠ Firestore Error', 'Could not save data: ' + error.message, false); 
+        console.error('Firestore error:', error); 
       } 
     }); 
     
@@ -653,6 +756,19 @@
         }
       });
     });
+    
+    // Initialize user count
+    async function initUserCount() {
+      try {
+        const snapshot = await db.collection("users").get();
+        document.getElementById('userCount').textContent = snapshot.size;
+      } catch (error) {
+        console.error('Error getting user count:', error);
+      }
+    }
+    
+    // Initialize the app
+    initUserCount();
   </script>
 </body>
 </html>
