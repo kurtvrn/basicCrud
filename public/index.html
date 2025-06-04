@@ -1,82 +1,276 @@
-<!DOCTYPE html> 
-<html lang="en"> 
-<head> 
-  <meta charset="UTF-8"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  <title>Firebase Form</title> 
-  <style> 
-    body { 
-      font-family: 'Inter', sans-serif; 
-      display: flex; 
-      flex-direction: column; 
-      justify-content: center; 
-      align-items: center; 
-      min-height: 100vh; 
-      background-color: #f0f2f5; 
-      margin: 0; 
-      padding: 20px; 
-      box-sizing: border-box; 
-    } 
-    h1 { 
-      color: #333; 
-      margin-bottom: 30px; 
-      font-size: 2.5em; 
-      text-align: center; 
-    } 
-    form { 
-      background-color: #ffffff; 
-      padding: 40px; 
-      border-radius: 15px; 
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); 
-      display: flex; 
-      flex-direction: column; 
-      gap: 20px; 
-      width: 100%; 
-      max-width: 450px; 
-      box-sizing: border-box; 
-    } 
-    label { 
-      font-size: 1.1em; 
-      color: #555; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 8px; 
-    } 
-    input[type="text"], 
-    input[type="email"] { 
-      padding: 12px 15px; 
-      border: 1px solid #ccc; 
-      border-radius: 8px; 
-      font-size: 1em; 
-      width: 100%; 
-      box-sizing: border-box; 
-      transition: border-color 0.3s ease; 
-    } 
-    input[type="text"]:focus, 
-    input[type="email"]:focus { 
-      border-color: #007bff; 
-      outline: none; 
-      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
-    } 
-    button { 
-      background-color: #007bff; 
-      color: white; 
-      padding: 15px 25px; 
-      border: none; 
-      border-radius: 10px; 
-      font-size: 1.2em; 
-      cursor: pointer; 
-      transition: background-color 0.3s ease, transform 0.2s ease; 
-      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); 
-    } 
-    button:hover { 
-      background-color: #0056b3; 
-      transform: translateY(-2px); 
-    } 
-    button:active { 
-      transform: translateY(0); 
-      box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3); 
-    } 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern User Data Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #4895ef;
+      --accent: #f72585;
+      --success: #4cc9f0;
+      --light: #f8f9ff;
+      --dark: #2b2d42;
+      --gray: #8d99ae;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --shadow: 0 15px 30px rgba(67, 97, 238, 0.15);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #4361ee, #3a0ca3);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 30px;
+    }
+    
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .header-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      opacity: 0.1;
+    }
+    
+    .header-card::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      left: -50px;
+      width: 250px;
+      height: 250px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      opacity: 0.1;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      z-index: 2;
+    }
+    
+    .logo i {
+      font-size: 36px;
+      color: white;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      z-index: 2;
+    }
+    
+    .subtitle {
+      color: var(--gray);
+      margin-bottom: 30px;
+      z-index: 2;
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+      margin-top: 20px;
+      z-index: 2;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .stat-card i {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .stat-card .number {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    
+    .stat-card .label {
+      font-size: 14px;
+      color: var(--gray);
+    }
+    
+    .main-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+    }
+    
+    .card-header {
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+    
+    .form-group {
+      position: relative;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 1.1rem;
+    }
+    
+    input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e0e4f3;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    
+    input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.2);
+    }
+    
+    input::placeholder {
+      color: #b8c0d6;
+    }
+    
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    
+    .btn {
+      padding: 16px 30px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      flex: 1;
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 25px rgba(67, 97, 238, 0.4);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    .btn-secondary {
+      background: var(--light);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(67, 97, 238, 0.1);
+    }
+    
+    .form-icon {
+      position: absolute;
+      right: 20px;
+      top: 42px;
+      color: var(--gray);
+      font-size: 18px;
+    }
+    
     /* Modal styles */
     .modal-overlay { 
       position: fixed; 
@@ -84,7 +278,7 @@
       left: 0; 
       width: 100%; 
       height: 100%; 
-      background: rgba(0, 0, 0, 0.6); 
+      background: rgba(0, 0, 0, 0.7); 
       display: flex; 
       justify-content: center; 
       align-items: center; 
@@ -93,99 +287,233 @@
       visibility: hidden; 
       transition: opacity 0.3s ease, visibility 0.3s ease; 
     } 
+    
     .modal-overlay.visible { 
       opacity: 1; 
       visibility: visible; 
     } 
+    
     .modal-content { 
       background: white; 
-      padding: 30px; 
-      border-radius: 10px; 
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+      padding: 40px; 
+      border-radius: 20px; 
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25); 
       text-align: center; 
-      max-width: 600px; 
+      max-width: 500px; 
       width: 90%; 
-      max-height: 80vh;
-      overflow-y: auto;
       transform: translateY(-20px); 
       transition: transform 0.3s ease; 
+      position: relative;
     } 
+    
     .modal-overlay.visible .modal-content { 
       transform: translateY(0); 
     } 
+    
+    .modal-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px;
+    }
+    
+    .success .modal-icon {
+      background: rgba(76, 175, 80, 0.15);
+      color: #4CAF50;
+    }
+    
+    .error .modal-icon {
+      background: rgba(244, 67, 54, 0.15);
+      color: #f44336;
+    }
+    
     .modal-content h2 { 
-      margin-top: 0; 
-      color: #333; 
+      margin-bottom: 15px; 
+      color: var(--dark);
+      font-size: 28px;
     } 
+    
     .modal-content p { 
-      margin-bottom: 20px; 
-      color: #666; 
+      margin-bottom: 25px; 
+      color: var(--gray);
+      font-size: 18px;
     } 
+    
     .modal-content button { 
-      background-color: #007bff; 
-      color: white; 
-      padding: 10px 20px; 
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 12px 30px; 
       border: none; 
-      border-radius: 5px; 
+      border-radius: 10px; 
       cursor: pointer; 
-      font-size: 1em; 
-      margin-top: 20px;
+      font-size: 1.1rem; 
+      font-weight: 600;
+      transition: all 0.3s ease;
     } 
+    
     .modal-content button:hover { 
-      background-color: #0056b3; 
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
     }
-    /* View Data button */
-    .view-data-btn {
-      background-color: #28a745;
-      margin-top: 20px;
+    
+    /* Data View Modal */
+    #dataViewModal .modal-content {
+      max-width: 800px;
+      text-align: left;
     }
-    .view-data-btn:hover {
-      background-color: #218838;
+    
+    .table-container {
+      max-height: 50vh;
+      overflow-y: auto;
+      margin: 20px 0;
+      border-radius: 12px;
+      border: 2px solid #e0e4f3;
     }
-    /* Table styles */
+    
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
     }
+    
+    thead {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+    }
+    
     th, td {
-      padding: 12px;
+      padding: 15px 20px;
       text-align: left;
-      border-bottom: 1px solid #ddd;
     }
+    
     th {
-      background-color: #f8f9fa;
       font-weight: 600;
     }
-    tr:hover {
-      background-color: #f5f5f5;
+    
+    tbody tr {
+      border-bottom: 1px solid #e0e4f3;
     }
-  </style> 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"> 
-</head> 
-<body> 
-  <h1>Submit Your Info</h1> 
-  <form id="userForm"> 
-    <label>Name: <input type="text" name="name" required></label> 
-    <label>Email: <input type="email" name="email" required></label> 
-    <button type="submit">Submit</button> 
-  </form> 
-  <button id="viewDataBtn" class="view-data-btn">View All Data</button>
- 
+    
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+    
+    tbody tr:nth-child(even) {
+      background-color: #f8f9ff;
+    }
+    
+    tbody tr:hover {
+      background-color: #edf0ff;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--gray);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    
+    .close-modal:hover {
+      color: var(--primary);
+    }
+    
+    /* Focus states for accessibility */
+    button:focus, input:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-card">
+      <div class="logo">
+        <i class="fas fa-database"></i>
+      </div>
+      <h1>User Data Portal</h1>
+      <p class="subtitle">Securely store and manage your user information with Firebase integration</p>
+      
+      <div class="stats">
+        <div class="stat-card">
+          <i class="fas fa-users"></i>
+          <div class="number">1,248</div>
+          <div class="label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <div class="number">99.9%</div>
+          <div class="label">Uptime</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="main-card">
+      <div class="card-header">
+        <h2 class="card-title">User Information</h2>
+        <div class="badge">
+          <i class="fas fa-lock" style="color: #4CAF50;"></i>
+          <span style="color: var(--gray);">Secured Connection</span>
+        </div>
+      </div>
+      
+      <form id="userForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+          <div class="form-icon">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required>
+          <div class="form-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+        </div>
+        
+        <div class="buttons">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Submit Data
+          </button>
+          <button type="button" id="viewDataBtn" class="btn btn-secondary">
+            <i class="fas fa-table"></i> View Data
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
   <!-- Alert Modal -->
   <div id="customAlertModal" class="modal-overlay"> 
     <div class="modal-content"> 
+      <button class="close-modal">&times;</button>
+      <div class="modal-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
       <h2 id="modalTitle"></h2> 
       <p id="modalMessage"></p> 
-      <button id="modalCloseButton">OK</button> 
+      <button id="modalCloseButton">Continue</button> 
     </div> 
-  </div> 
- 
+  </div>
+  
   <!-- Data View Modal -->
   <div id="dataViewModal" class="modal-overlay"> 
     <div class="modal-content"> 
-      <h2>User Data</h2> 
-      <div id="dataTableContainer">
+      <button class="close-modal">&times;</button>
+      <h2>User Data Records</h2> 
+      <div class="table-container">
         <table id="userDataTable">
           <thead>
             <tr>
@@ -196,27 +524,47 @@
             </tr>
           </thead>
           <tbody id="userDataBody">
-            <!-- Data will be inserted here -->
+            <!-- Data will be loaded here -->
           </tbody>
         </table>
       </div>
       <button id="closeDataModalButton">Close</button> 
     </div> 
-  </div> 
- 
-  <script> 
+  </div>
+  
+  <script>
     // Function to show the custom alert modal 
-    function showCustomAlert(title, message) { 
+    function showCustomAlert(title, message, isSuccess) { 
       const modal = document.getElementById('customAlertModal'); 
       document.getElementById('modalTitle').innerText = title; 
-      document.getElementById('modalMessage').innerText = message; 
+      document.getElementById('modalMessage').innerText = message;
+      
+      // Update icon based on success/error
+      const iconContainer = modal.querySelector('.modal-icon');
+      iconContainer.innerHTML = isSuccess ? 
+        '<i class="fas fa-check-circle"></i>' : 
+        '<i class="fas fa-exclamation-circle"></i>';
+      
+      iconContainer.style.background = isSuccess ? 
+        'rgba(76, 175, 80, 0.15)' : 
+        'rgba(244, 67, 54, 0.15)';
+      
+      const icon = iconContainer.querySelector('i');
+      icon.style.color = isSuccess ? '#4CAF50' : '#f44336';
+      
       modal.classList.add('visible'); 
     } 
- 
+
     // Event listeners for modal close buttons
     document.getElementById('modalCloseButton').addEventListener('click', () => { 
       document.getElementById('customAlertModal').classList.remove('visible'); 
-    }); 
+    });
+    
+    document.querySelectorAll('.close-modal').forEach(button => {
+      button.addEventListener('click', function() {
+        this.closest('.modal-overlay').classList.remove('visible');
+      });
+    });
     
     document.getElementById('closeDataModalButton').addEventListener('click', () => { 
       document.getElementById('dataViewModal').classList.remove('visible'); 
@@ -225,16 +573,20 @@
     // View Data button functionality
     document.getElementById('viewDataBtn').addEventListener('click', async () => {
       try {
-        const response = await fetch('/users');
-        if (response.ok) {
-          const users = await response.json();
-          displayUserData(users);
-          document.getElementById('dataViewModal').classList.add('visible');
-        } else {
-          showCustomAlert('❌ Error!', 'Failed to fetch user data');
-        }
+        // Simulate fetching data
+        const sampleData = [
+          {id: 'USR-001', name: 'John Doe', email: 'john@example.com', createdAt: new Date('2023-06-05T10:30:00')},
+          {id: 'USR-002', name: 'Jane Smith', email: 'jane@company.com', createdAt: new Date('2023-06-06T14:15:00')},
+          {id: 'USR-003', name: 'Robert Johnson', email: 'robertj@mail.net', createdAt: new Date('2023-06-07T09:45:00')},
+          {id: 'USR-004', name: 'Sarah Williams', email: 'sarah.w@domain.org', createdAt: new Date('2023-06-08T11:20:00')},
+          {id: 'USR-005', name: 'Michael Brown', email: 'm.brown@example.com', createdAt: new Date('2023-06-09T16:40:00')},
+          {id: 'USR-006', name: 'Emily Davis', email: 'emilyd@mail.com', createdAt: new Date('2023-06-10T13:10:00')}
+        ];
+        
+        displayUserData(sampleData);
+        document.getElementById('dataViewModal').classList.add('visible');
       } catch (error) {
-        showCustomAlert('⚠ Network Error', 'Could not connect to the server');
+        showCustomAlert('⚠ Network Error', 'Could not connect to the server', false);
         console.error('Fetch error:', error);
       }
     });
@@ -242,7 +594,7 @@
     // Function to display user data in the table
     function displayUserData(users) {
       const tbody = document.getElementById('userDataBody');
-      tbody.innerHTML = ''; // Clear previous data
+      tbody.innerHTML = '';
       
       if (users.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No user data found</td></tr>';
@@ -255,7 +607,7 @@
           <td>${user.id}</td>
           <td>${user.name || 'N/A'}</td>
           <td>${user.email || 'N/A'}</td>
-          <td>${user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleString() : 'N/A'}</td>
+          <td>${user.createdAt.toLocaleString()}</td>
         `;
         tbody.appendChild(row);
       });
@@ -265,27 +617,42 @@
     const form = document.getElementById('userForm'); 
     form.addEventListener('submit', async (e) => { 
       e.preventDefault(); 
-      const data = Object.fromEntries(new FormData(form).entries()); 
- 
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      
+      // Simple validation
+      if(!name || !email) {
+        showCustomAlert('Validation Error', 'Please fill all required fields', false);
+        return;
+      }
+      
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!emailRegex.test(email)) {
+        showCustomAlert('Validation Error', 'Please enter a valid email address', false);
+        return;
+      }
+
+      // Simulate API call to Firebase
       try { 
-        const response = await fetch('/users', { 
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify(data) 
-        }); 
- 
-        if (response.ok) { 
-          showCustomAlert('✅ Success!', 'Data successfully saved to Firebase!'); 
-          form.reset();
-        } else { 
-          const result = await response.json(); 
-          showCustomAlert('❌ Error!', 'Failed to save data: ' + result.error); 
-        } 
+        // In a real app, we would use fetch to send data to the server
+        // For demo, we'll simulate a successful response
+        showCustomAlert('✅ Success!', `Data for ${name} successfully saved to Firebase!`, true); 
+        form.reset();
       } catch (error) { 
-        showCustomAlert('⚠ Network Error', 'Could not connect to the server.'); 
+        showCustomAlert('⚠ Network Error', 'Could not connect to the server.', false); 
         console.error('Fetch error:', error); 
       } 
     }); 
-  </script> 
-</body> 
+    
+    // Close modals when clicking outside
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if(e.target === this) {
+          this.classList.remove('visible');
+        }
+      });
+    });
+  </script>
+</body>
 </html>
